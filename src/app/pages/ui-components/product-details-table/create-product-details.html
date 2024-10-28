@@ -1,0 +1,85 @@
+<h2 mat-dialog-title>Crear Detalle de Producto</h2>
+
+<mat-dialog-content>
+    <p>
+        Complete la siguiente información para crear el detalle de los productos.
+    </p>
+    <form class="example-form" [formGroup]="productDetailsForm" (ngSubmit)="submitProductDetails()">
+        <div class="row">
+            <div class="col-6 m-b-12">
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <mat-label>Selecciona un punto de recolección</mat-label>
+                    <mat-select formControlName="productId">
+                        <mat-option *ngFor="let product of productsList" [value]="product.product_id">
+                            {{ product.product_name }}
+                        </mat-option>
+                    </mat-select>
+                    @if (productDetailsForm.get('productId')?.hasError('required')) {
+                    <mat-error>Seleccione el producto para <strong>continuar.</strong></mat-error>
+                    }
+                </mat-form-field>
+            </div>
+            <div class="col-6 m-b-12">
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <mat-label>Stock</mat-label>
+                    <input type="text" matInput formControlName="stock"> @if (productDetailsForm.get('stock')?.hasError('required')) {
+                    <mat-error>La cantidad en stock es <strong>obligatoria.</strong></mat-error>
+                    }
+                </mat-form-field>
+            </div>
+            <div class="col-6 m-b-12">
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <mat-label>Libras por paquete</mat-label>
+                    <input type="text" matInput formControlName="weigthPoundsPack"> @if (productDetailsForm.get('weigthPoundsPack')?.hasError('required')) {
+                    <mat-error>Ingrese las libras por paquete para <strong>continuar.</strong></mat-error>
+                    }
+                </mat-form-field>
+            </div>
+            <div class="col-6 m-b-12">
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <mat-label>Precio</mat-label>
+                    <input type="text" matInput formControlName="startingPrice" (input)="formatCurrencyInput($event)"> @if (productDetailsForm.get('startingPrice')?.hasError('required')) {
+                    <mat-error>El costo del producto es <strong>obligatorio.</strong></mat-error>
+                    }
+                </mat-form-field>
+            </div>
+            <div class="col-6 m-b-12">
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <mat-label>Cantidad mínima</mat-label>
+                    <input type="text" matInput formControlName="minimunQuantity"> @if (productDetailsForm.get('minimunQuantity')?.hasError('required')) {
+                    <mat-error>La cantidad mínima es <strong>obligatoria.</strong></mat-error>
+                    }
+                </mat-form-field>
+            </div>
+            <div class="col-6 m-b-12">
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <mat-label>Selecciona un punto de recolección</mat-label>
+                    <mat-select formControlName="collectionPoint">
+                        <mat-option *ngFor="let collection of collectionsList" [value]="collection.collectionPoint_id">
+                            {{ collection.pointName }}
+                        </mat-option>
+                    </mat-select>
+                    @if (productDetailsForm.get('collectionPoint')?.hasError('required')) {
+                    <mat-error>El punto de recolección es <strong>obligatorio.</strong></mat-error>
+                    }
+                </mat-form-field>
+            </div>
+            <div class="col-lg-6 m-b-8">
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <mat-label>Fecha de cosecha</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="harvestDate" [max]="maxDate">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    @if (productForm.get('harvestDate')?.hasError('required')) {
+                    <mat-error>La fecha de cosecha es <strong>obligatoria.</strong></mat-error>
+                    }
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-stroked-button color="warn " mat-dialog-close>Cancelar</button>
+    <button mat-flat-button type=" submit " color="primary " class="m-r-8 " (click)="submitProductDetails()">Añadir
+        Detalles de Producto</button>
+</mat-dialog-actions>

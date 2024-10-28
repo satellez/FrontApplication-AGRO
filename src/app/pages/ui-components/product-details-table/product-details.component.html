@@ -1,0 +1,163 @@
+<mat-card class="cardWithShadow">
+    <mat-card-header>
+        <mat-card-title-group class="m-b-10">
+            <mat-card-title>Listado de Detalle de Productos</mat-card-title>
+            <button mat-flat-button (click)="openDialog()" color="primary">Crear Detalle de Producto</button>
+        </mat-card-title-group>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="table-responsive">
+            <table mat-table [dataSource]="productsDetailsList" class="w-100">
+                <!-- Position Column -->
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14 p-l-0">
+                        ID
+                    </th>
+                    <td mat-cell *matCellDef="let product" class="p-l-0">
+                        <div class="d-flex align-items-center">
+                            <p class="f-s-14">
+                                {{ product.prodDeta_id }}
+                            </p>
+                        </div>
+                    </td>
+                </ng-container>
+
+
+                <!-- Número de Documento Column -->
+                <ng-container matColumnDef="product_name">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14 p-l-0">
+                        Nombre
+                    </th>
+                    <td mat-cell *matCellDef="let product" class="p-l-0">
+                        <div class="d-flex align-items-center">
+                            <p class="f-s-14">
+                                {{ product.products.product_name }}
+                            </p>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- productname Column -->
+                <ng-container matColumnDef="category_name">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14 p-l-0">
+                        Nombre Categoría
+                    </th>
+                    <td mat-cell *matCellDef="let product" class="p-l-0">
+                        <div class="d-flex align-items-center">
+                            <p class="f-s-14">
+                                {{ product.products.productCategories.category_name }}
+                            </p>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- productname Column -->
+                <ng-container matColumnDef="quantityStock">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14 p-l-0">
+                        Cant. en Stock
+                    </th>
+                    <td mat-cell *matCellDef="let product" class="p-l-0">
+                        <div class="d-flex align-items-center">
+                            <p class="f-s-14">
+                                {{ product.quantityStock }}
+                            </p>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- productname Column -->
+                <ng-container matColumnDef="weigthPoundsPack">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14 p-l-0">
+                        Libras por paquete
+                    </th>
+                    <td mat-cell *matCellDef="let product" class="p-l-0">
+                        <div class="d-flex align-items-center">
+                            <p class="f-s-14">
+                                {{ product.weigthPoundsPack }}
+                            </p>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- productname Column -->
+                <ng-container matColumnDef="startingPrice">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14 p-l-0">
+                        Precio
+                    </th>
+                    <td mat-cell *matCellDef="let product" class="p-l-0">
+                        <div class="d-flex align-items-center">
+                            <p class="f-s-14">
+                                {{ product.startingPrice | currency:'$':true:'1.0-0' }}
+                            </p>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- productname Column -->
+                <ng-container matColumnDef="minimunQuantity">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14 p-l-0">
+                        Cant. Mínima de compra
+                    </th>
+                    <td mat-cell *matCellDef="let product" class="p-l-0">
+                        <div class="d-flex align-items-center">
+                            <p class="f-s-14">
+                                {{ product.minimunQuantity }}
+                            </p>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- productname Column -->
+                <ng-container matColumnDef="pointName">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14 p-l-0">
+                        Punto de recolección
+                    </th>
+                    <td mat-cell *matCellDef="let product" class="p-l-0">
+                        <div class="d-flex align-items-center">
+                            <p class="f-s-14">
+                                {{ product.collections.pointName }}
+                            </p>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- productname Column -->
+                <ng-container matColumnDef="harvestDate">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14 p-l-0">
+                        Fecha de cosecha
+                    </th>
+                    <td mat-cell *matCellDef="let product" class="p-l-0">
+                        <div class="d-flex align-items-center">
+                            <p class="f-s-14">
+                                {{ product.harvestDate | date: 'dd/MM/yyyy' }}
+                            </p>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14"></th>
+                    <td mat-cell *matCellDef="let element" class="mat-body-1">
+                        <button mat-icon-button [matMenuTriggerFor]="productMenu">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #productMenu="matMenu">
+                            <button mat-menu-item (click)="updateProductDetails(element)">
+                                <mat-icon>edit</mat-icon>
+                                <span>Edit</span>
+                            </button>
+                            <button mat-menu-item (click)="deleteProductDetails(element.prodDeta_id)">
+                                <mat-icon>delete</mat-icon>
+                                <span>Delete</span>
+                            </button>
+                        </mat-menu>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedProductDetailsColumns"></tr>
+                <tr mat-row *matRowDef="let productRow; columns: displayedProductDetailsColumns"></tr>
+            </table>
+        </div>
+    </mat-card-content>
+</mat-card>
