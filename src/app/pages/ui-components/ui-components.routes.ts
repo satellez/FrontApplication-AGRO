@@ -11,6 +11,7 @@ import { AppTablesComponent } from './tables/tables.component';
 import { AppProductComponent } from './product-table/product.component';
 import { AppCollectionComponent } from './collections-table/collection.component';
 import { AppProductDetailsComponent } from './product-details-table/product-details.component';
+import { AppBillComponent } from './bills-table/bill.component';
 
 export const UiComponentsRoutes: Routes = [
   {
@@ -55,6 +56,10 @@ export const UiComponentsRoutes: Routes = [
       {
         path: 'puntos-recoleccion',
         component: AppCollectionComponent,
+      },
+      {
+        path: 'facturas',
+        component: AppBillComponent,
       },
     ],
   },

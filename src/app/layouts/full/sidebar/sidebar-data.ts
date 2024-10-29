@@ -62,6 +62,11 @@ export const navItems: NavItem[] = [
     iconName: 'map-2',
     route: '/admin/puntos-recoleccion',
   },
+  {
+    displayName: 'Facturas',
+    iconName: 'list-details',
+    route: '/admin/facturas',
+  },
   // {
   //   navCap: 'Auth',
   // },
