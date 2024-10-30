@@ -28,3 +28,8 @@ export interface Document {
   document_name: string;
   isDeleted: boolean;
 }
+
+export interface successLogin {
+  message: string,
+  userId: number,
+}

@@ -17,6 +17,11 @@
                     }
                 </mat-nav-list>
             </ng-scrollbar>
+            <mat-nav-list class="sidebar-list">
+                <button mat-stroked-button extended type="submit" color="danger" class="w-100" (click)="logoutUser()">
+                    <mat-icon>logout</mat-icon> Cerrar sesión
+                </button>
+            </mat-nav-list>
         </mat-sidenav>
 
         <!-- ============================================================== -->

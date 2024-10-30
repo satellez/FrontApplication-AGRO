@@ -102,8 +102,7 @@ export class AppBillComponent implements OnInit {
     this.billService.getBillsList().subscribe((billsList) => {
       this.billsList = billsList;
       this.cdr.detectChanges();
-      console.log(this.billsList);
-      
+      console.log(this.billsList);      
     });
     // this.billDetailsService.getProductsDetailsList().subscribe((productDetailList) => {
     //   this.productsDetailsList = productDetailList;

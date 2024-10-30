@@ -56,7 +56,7 @@ export class FullComponent implements OnInit {
     return this.isMobileScreen;
   }
 
-  constructor(private breakpointObserver: BreakpointObserver, private navService: NavService) {
+  constructor(private breakpointObserver: BreakpointObserver, private navService: NavService, private router: Router,) {
     
     this.htmlElement = document.querySelector('html')!;
     this.htmlElement.classList.add('light-theme');
@@ -87,5 +87,10 @@ export class FullComponent implements OnInit {
 
   onSidenavOpenedChange(isOpened: boolean) {
     this.isCollapsedWidthFixed = !this.isOver;
+  }
+
+  logoutUser() {
+    window.localStorage.removeItem('user');
+    this.router.navigate(['/authentication/login']);
   }
 }

@@ -41,4 +41,12 @@ export class UsersListService {
     const url = this.path + '/Users/' + userId;
     return this.http.delete(url, { headers: this.headers });
   }
+
+  loginUser(email : string, password : string) {
+    const url = this.path + '/Users/login';
+    let authentication = {
+      email, password
+    }
+    return this.http.post(url, JSON.stringify(authentication), { headers: this.headers })
+  }
 }

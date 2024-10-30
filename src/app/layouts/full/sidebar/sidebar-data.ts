@@ -1,14 +1,14 @@
 import { NavItem } from './nav-item/nav-item';
 
 export const navItems: NavItem[] = [
-  {
-    navCap: 'Home',
-  },
-  {
-    displayName: 'Dashboard',
-    iconName: 'layout-grid-add',
-    route: '/dashboard',
-  },
+  // {
+  //   navCap: 'Home',
+  // },
+  // {
+  //   displayName: 'Dashboard',
+  //   iconName: 'layout-grid-add',
+  //   route: '/dashboard',
+  // },
   {
     navCap: 'Módulos',
   },
@@ -71,8 +71,8 @@ export const navItems: NavItem[] = [
   //   navCap: 'Auth',
   // },
   // {
-  //   displayName: 'Login',
-  //   iconName: 'login',
+  //   displayName: 'Cerrar sesión',
+  //   iconName: 'logout',
   //   route: '/authentication/login',
   // },
   // {
@@ -80,14 +80,14 @@ export const navItems: NavItem[] = [
   //   iconName: 'user-plus',
   //   route: '/authentication/register',
   // },
-  // {
-  //   navCap: 'Extra',
-  // },
-  // {
-  //   displayName: 'Icons',
-  //   iconName: 'mood-smile',
-  //   route: '/extra/icons',
-  // },
+  {
+    navCap: 'Extra',
+  },
+  {
+    displayName: 'Icons',
+    iconName: 'mood-smile',
+    route: '/extra/icons',
+  },
   // {
   //   displayName: 'Sample Page',
   //   iconName: 'brand-dribbble',
