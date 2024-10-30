@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>Edotar Productos</h2>
+<mat-dialog-content>
+    <p>
+        Complete la siguiente información para editar productos.
+    </p>
+    <form class="example-form" [formGroup]="paymentMethodForm" (ngSubmit)="submitPaymentMethodUpdate()">
+        <div class="row">
+            <div class="col-lg-6 m-b-8">
+                <mat-form-field appearance="outline" class="w-100" color="primary">
+                    <mat-label>Nombre</mat-label>
+                    <input type="text" matInput formControlName="paymentName"> @if (paymentMethodForm.get('paymentName')?.hasError('required')) {
+                    <mat-error>El nombre es <strong>obligatorio.</strong></mat-error>
+                    }
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-stroked-button type=" submit " color="primary " class="m-r-8 " (click)="submitPaymentMethodUpdate()">Actualizar Medio de Pago</button>
+    <button mat-stroked-button color="warn " mat-dialog-close>Cancelar</button>
+</mat-dialog-actions>

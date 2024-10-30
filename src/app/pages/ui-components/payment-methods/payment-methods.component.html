@@ -1,0 +1,65 @@
+<mat-card class="cardWithShadow">
+    <mat-card-header>
+        <mat-card-title-group class="m-b-10">
+            <mat-card-title>Listado de Medios de Pago</mat-card-title>
+            <button mat-flat-button (click)="openDialog()" color="primary">Crear Medio de Pago</button>
+        </mat-card-title-group>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="table-responsive">
+            <table mat-table [dataSource]="paymentMethodsList" class="w-100">
+                <!-- Position Column -->
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14 p-l-0">
+                        ID
+                    </th>
+                    <td mat-cell *matCellDef="let payment" class="p-l-0">
+                        <div class="d-flex align-items-center">
+                            <p class="f-s-14">
+                                {{ payment.method_id }}
+                            </p>
+                        </div>
+                    </td>
+                </ng-container>
+
+
+                <!-- Número de Documento Column -->
+                <ng-container matColumnDef="methodName">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14 p-l-0">
+                        Nombre
+                    </th>
+                    <td mat-cell *matCellDef="let payment" class="p-l-0">
+                        <div class="d-flex align-items-center">
+                            <p class="f-s-14">
+                                {{ payment.method_name }}
+                            </p>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14"></th>
+                    <td mat-cell *matCellDef="let element" class="mat-body-1">
+                        <button mat-icon-button [matMenuTriggerFor]="productMenu">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #productMenu="matMenu">
+                            <button mat-menu-item (click)="updatePaymentMethod(element)">
+                                <mat-icon>edit</mat-icon>
+                                <span>Edit</span>
+                            </button>
+                            <button mat-menu-item (click)="deletePaymentMethod(element.method_id)">
+                                <mat-icon>delete</mat-icon>
+                                <span>Delete</span>
+                            </button>
+                        </mat-menu>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedPaymentMethodsColumns"></tr>
+                <tr mat-row *matRowDef="let productRow; columns: displayedPaymentMethodsColumns"></tr>
+            </table>
+        </div>
+    </mat-card-content>
+</mat-card>

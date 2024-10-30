@@ -67,6 +67,11 @@ export const navItems: NavItem[] = [
     iconName: 'list-details',
     route: '/admin/facturas',
   },
+  {
+    displayName: 'Medios de Pago',
+    iconName: 'list-details',
+    route: '/admin/medios-de-pago',
+  },
   // {
   //   navCap: 'Auth',
   // },
