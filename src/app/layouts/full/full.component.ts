@@ -13,12 +13,14 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { HeaderComponent } from './header/header.component';
+import { UsersListService } from 'src/app/services/users-list.service';
+import Swal from 'sweetalert2';
+import { User } from 'src/app/interfaces/UsersInterfaces';
 
 const MOBILE_VIEW = 'screen and (max-width: 768px)';
 const TABLET_VIEW = 'screen and (min-width: 769px) and (max-width: 1024px)';
 const MONITOR_VIEW = 'screen and (min-width: 1024px)';
 const BELOWMONITOR = 'screen and (max-width: 1023px)';
-
 
 @Component({
   selector: 'app-full',
@@ -37,9 +39,7 @@ const BELOWMONITOR = 'screen and (max-width: 1023px)';
   styleUrls: [],
   encapsulation: ViewEncapsulation.None,
 })
-
 export class FullComponent implements OnInit {
-
   navItems = navItems;
 
   @ViewChild('leftsidenav')
@@ -56,8 +56,15 @@ export class FullComponent implements OnInit {
     return this.isMobileScreen;
   }
 
-  constructor(private breakpointObserver: BreakpointObserver, private navService: NavService, private router: Router,) {
-    
+  userId: number;
+  userInfo : User;
+
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private navService: NavService,
+    private router: Router,
+    private userService: UsersListService
+  ) {
     this.htmlElement = document.querySelector('html')!;
     this.htmlElement.classList.add('light-theme');
     this.layoutChangesSubscription = this.breakpointObserver
@@ -71,7 +78,18 @@ export class FullComponent implements OnInit {
       });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+
+    if (!window.localStorage.getItem('user')) {
+      this.router.navigate(['/authentication/login']);
+    } else {
+      this.userId = parseInt(window.localStorage.getItem('user') ?? '');
+  
+      if (this.userId != 0) {
+        this.getUserInfo(this.userId);
+      }
+    }
+  }
 
   ngOnDestroy() {
     this.layoutChangesSubscription.unsubscribe();
@@ -92,5 +110,31 @@ export class FullComponent implements OnInit {
   logoutUser() {
     window.localStorage.removeItem('user');
     this.router.navigate(['/authentication/login']);
+  }
+
+  getUserInfo(userId: number) {
+    this.userService.getUser(userId).subscribe({
+      next: (response) => {
+        console.log(response);
+        
+        this.userInfo.username = (response as User).username;
+        this.userInfo.userType_id = (response as User).userType_id;
+        console.log(this.userInfo.username);
+        
+        Swal.fire({
+          title: '¡Inicio de sesión exitoso!',
+          icon: 'success',
+        });
+
+        window.localStorage.setItem('userInfo', this.userId.toString());
+      },
+      error: (error) => {
+        Swal.fire({
+          title: 'Oops',
+          text: 'Usuario o contraseña incorrectas. Intenta de nuevo por favor.',
+          icon: 'error',
+        });
+      },
+    });
   }
 }

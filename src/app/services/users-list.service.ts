@@ -21,8 +21,12 @@ export class UsersListService {
 
   setUser(userObject: User) {
     const url = this.path + '/Users';
-
     return this.http.post(url, JSON.stringify(userObject), { headers: this.headers })
+  }
+
+  getUser(userId : number) {
+    const url = this.path + '/Users/' + userId;
+    return this.http.get<User>(url);
   }
 
   updateUser(userObject: User, userId: number) {
