@@ -1,32 +1,52 @@
-<h2 mat-dialog-title>Crear Productos</h2>
+<h2 mat-dialog-title>Crear Factura</h2>
 
-<!-- <div *ngIf="createdProductId == 0">
+<div *ngIf="createdBillId == 0">
     <mat-dialog-content>
         <p>
-            Complete la siguiente información para crear productos.
+            Seleccione el medio de pago por el cual se realizará el pago de esta factura.
         </p>
-        {{createdProductId}}
-        <form class="example-form" [formGroup]="billForm" (ngSubmit)="submitProduct()">
+        <form class="example-form" [formGroup]="billForm" (ngSubmit)="submitBill()">
             <div class="row">
-                <div class="col-6 m-b-12">
+                <div class="col-12 m-b-12">
                     <mat-form-field appearance="outline" class="w-100" color="primary">
-                        <mat-label>Nombre</mat-label>
-                        <input type="text" matInput formControlName="productName">
-                        @if (productForm.get('productName')?.hasError('required')) {
-                        <mat-error>El nombre es <strong>obligatorio.</strong></mat-error>
+                        <mat-label>Selecciona un medio de pago</mat-label>
+                        <mat-select formControlName="methodId">
+                            <mat-option *ngFor="let payment of paymentMethodList" [value]="payment.method_id">
+                                {{ payment.method_name }}
+                            </mat-option>
+                        </mat-select>
+                        @if (billForm.get('methodId')?.hasError('required')) {
+                        <mat-error>El medio de pago es <strong>obligatorio.</strong></mat-error>
                         }
                     </mat-form-field>
                 </div>
-                <div class="col-6 m-b-12">
+            </div>
+        </form>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button color="warn" mat-dialog-close>Cancelar</button>
+        <button mat-flat-button type=" submit" color="primary" class="m-r-8 " [disabled]="billForm.invalid" (click)="submitBill()">Crear
+            Factura</button>
+    </mat-dialog-actions>
+</div>
+
+<div *ngIf="createdBillId != 0">
+    <mat-dialog-content>
+        <p>
+            Para completar la creación de la factura ingrese los detalles a continuación.
+        </p>
+        <form class="example-form" [formGroup]="billDetailsForm" (ngSubmit)="submitBillsDetails()">
+            <div class="row">
+                <div class="col-12 m-b-12">
                     <mat-form-field appearance="outline" class="w-100" color="primary">
-                        <mat-label>Selecciona una categoría</mat-label>
-                        <mat-select formControlName="categoryId">
-                            <mat-option *ngFor="let category of productsCatgories" [value]="category.category_id">
-                                {{ category.category_name }}
+                        <mat-label>Selecciona un producto para añadir a la factura</mat-label>
+                        <mat-select formControlName="product">
+                            <mat-option *ngFor="let product of productsList" [value]="product.product_id">
+                                {{ product.product_name }}
                             </mat-option>
                         </mat-select>
-                        @if (productForm.get('categoryId')?.hasError('required')) {
-                        <mat-error>La categoría es <strong>obligatoria.</strong></mat-error>
+                        @if (billDetailsForm.get('product')?.hasError('required')) {
+                        <mat-error>El producto es <strong>obligatorio.</strong></mat-error>
                         }
                     </mat-form-field>
                 </div>
@@ -35,80 +55,6 @@
     </mat-dialog-content>
     <mat-dialog-actions align="end">
         <button mat-stroked-button color="warn " mat-dialog-close>Cancelar</button>
-        <button mat-flat-button type=" submit " color="primary " class="m-r-8 " (click)="submitProduct()">Crear
-            Producto</button>
+        <button mat-flat-button type=" submit " color="primary " class="m-r-8 " (click)="submitBillsDetails()" [disabled]="billDetailsForm.invalid">Añadir Detalles de Factura</button>
     </mat-dialog-actions>
-</div> -->
-
-<!-- <div *ngIf="createdProductId != 0">
-    <mat-dialog-content>
-        <p>
-            Para completar la creación del producto ingrese los detalles a continuación.
-        </p>
-        {{createdProductId}}
-        <form class="example-form" [formGroup]="productDetailsForm" (ngSubmit)="submitProduct()">
-            <div class="row">
-                <div class="col-6 m-b-12">
-                    <mat-form-field appearance="outline" class="w-100" color="primary">
-                        <mat-label>Stock</mat-label>
-                        <input type="text" matInput formControlName="stock"> @if (productForm.get('stock')?.hasError('required')) {
-                        <mat-error>La cantidad en stock es <strong>obligatoria.</strong></mat-error>
-                        }
-                    </mat-form-field>
-                </div>
-                <div class="col-6 m-b-12">
-                    <mat-form-field appearance="outline" class="w-100" color="primary">
-                        <mat-label>Libras por paquete</mat-label>
-                        <input type="text" matInput formControlName="weigthPoundsPack"> @if (productForm.get('weigthPoundsPack')?.hasError('required')) {
-                        <mat-error>Ingrese las libras por paquete para <strong>continuar.</strong></mat-error>
-                        }
-                    </mat-form-field>
-                </div>
-                <div class="col-6 m-b-12">
-                    <mat-form-field appearance="outline" class="w-100" color="primary">
-                        <mat-label>Precio</mat-label>
-                        <input type="text" matInput formControlName="startingPrice" (input)="formatCurrencyInput($event)"> @if (productForm.get('startingPrice')?.hasError('required')) {
-                        <mat-error>El costo del producto es <strong>obligatorio.</strong></mat-error>
-                        }
-                    </mat-form-field>
-                </div>
-                <div class="col-6 m-b-12">
-                    <mat-form-field appearance="outline" class="w-100" color="primary">
-                        <mat-label>Cantidad mínima</mat-label>
-                        <input type="text" matInput formControlName="minimunQuantity"> @if (productForm.get('minimunQuantity')?.hasError('required')) {
-                        <mat-error>La cantidad mínima es <strong>obligatoria.</strong></mat-error>
-                        }
-                    </mat-form-field>
-                </div>
-                <div class="col-6 m-b-12">
-                    <mat-form-field appearance="outline" class="w-100" color="primary">
-                        <mat-label>Selecciona un punto de recolección</mat-label>
-                        <mat-select formControlName="collectionPoint">
-                            <mat-option *ngFor="let collection of collectionsList" [value]="collection.collectionPoint_id">
-                                {{ collection.pointName }}
-                            </mat-option>
-                        </mat-select>
-                        @if (productForm.get('collectionPoint')?.hasError('required')) {
-                        <mat-error>El punto de recolección es <strong>obligatorio.</strong></mat-error>
-                        }
-                    </mat-form-field>
-                </div>
-                <div class="col-lg-6 m-b-8">
-                    <mat-form-field appearance="outline" class="w-100" color="primary">
-                        <mat-label>Fecha de cosecha</mat-label>
-                        <input matInput [matDatepicker]="picker" formControlName="harvestDate" [max]="maxDate">
-                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
-                        @if (productForm.get('harvestDate')?.hasError('required')) {
-                        <mat-error>La fecha de cosecha es <strong>obligatoria.</strong></mat-error>
-                        }
-                    </mat-form-field>
-                </div>
-            </div>
-        </form>
-    </mat-dialog-content>
-    <mat-dialog-actions align="end">
-        <button mat-stroked-button color="warn " mat-dialog-close>Cancelar</button>
-        <button mat-flat-button type=" submit " color="primary " class="m-r-8 " (click)="submitProductDetails()">Añadir Detalles de Producto</button>
-    </mat-dialog-actions>
-</div> -->
+</div>

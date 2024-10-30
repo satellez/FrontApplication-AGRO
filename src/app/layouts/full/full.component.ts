@@ -116,24 +116,17 @@ export class FullComponent implements OnInit {
     this.userService.getUser(userId).subscribe({
       next: (response) => {
         console.log(response);
-        
-        this.userInfo.username = (response as User).username;
-        this.userInfo.userType_id = (response as User).userType_id;
-        console.log(this.userInfo.username);
-        
-        Swal.fire({
-          title: '¡Inicio de sesión exitoso!',
-          icon: 'success',
-        });
 
-        window.localStorage.setItem('userInfo', this.userId.toString());
+        this.userInfo = response;
+        window.localStorage.setItem('userInfo', JSON.stringify(this.userInfo));
       },
       error: (error) => {
         Swal.fire({
           title: 'Oops',
-          text: 'Usuario o contraseña incorrectas. Intenta de nuevo por favor.',
+          text: 'No tienes permisos para este módulo.',
           icon: 'error',
         });
+        this.router.navigate(['/authentication/login']);
       },
     });
   }

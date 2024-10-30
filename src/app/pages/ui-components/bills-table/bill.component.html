@@ -1,8 +1,8 @@
 <mat-card class="cardWithShadow">
     <mat-card-header>
         <mat-card-title-group class="m-b-10">
-            <mat-card-title>Listado de Productos</mat-card-title>
-            <button mat-flat-button (click)="openDialog()" color="primary">Crear Producto</button>
+            <mat-card-title>Listado de Facturas</mat-card-title>
+            <button mat-flat-button (click)="openDialog()" color="primary">Crear Factura</button>
         </mat-card-title-group>
     </mat-card-header>
     <mat-card-content>
@@ -53,7 +53,7 @@
                 <!-- productname Column -->
                 <ng-container matColumnDef="category_name">
                     <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14 p-l-0">
-                        Fecha de creación
+                        Fecha de compra
                     </th>
                     <td mat-cell *matCellDef="let bill" class="p-l-0">
                         <div class="d-flex align-items-center">
@@ -72,13 +72,13 @@
                             <mat-icon>more_vert</mat-icon>
                         </button>
                         <mat-menu #productMenu="matMenu">
-                            <button mat-menu-item (click)="updateProduct(element)">
+                            <button mat-menu-item (click)="updateBill(element)">
                                 <mat-icon>edit</mat-icon>
-                                <span>Edit</span>
+                                <span>Editar</span>
                             </button>
-                            <button mat-menu-item (click)="deleteProduct(element.product_id)">
+                            <button mat-menu-item (click)="deleteBill(element.bill_id)">
                                 <mat-icon>delete</mat-icon>
-                                <span>Delete</span>
+                                <span>Eliminar</span>
                             </button>
                         </mat-menu>
                     </td>

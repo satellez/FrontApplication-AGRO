@@ -45,13 +45,15 @@ import {
   ProductCategory,
   ProductDetails,
 } from 'src/app/interfaces/ProductsInterfaces';
-import { ProductsServiceService } from 'src/app/services/products-service.service';
 import { CollectionService } from 'src/app/services/collection.service';
 import { Collection } from 'src/app/interfaces/CollectionInterfaces';
-import { ProductDetailsService } from 'src/app/services/product-details.service';
 import { Bill, BillDetails } from 'src/app/interfaces/BillsInterface';
 import { BillService } from 'src/app/services/bill.service';
 import { BillDetailsService } from 'src/app/services/bill-details.service';
+import { PaymentMethod } from 'src/app/interfaces/PaymentMethodInterface';
+import { PaymentMethodService } from 'src/app/services/payment-method.service';
+import { Router } from '@angular/router';
+import { ProductsServiceService } from 'src/app/services/products-service.service';
 
 // table 1
 export interface productsData {
@@ -102,7 +104,7 @@ export class AppBillComponent implements OnInit {
     this.billService.getBillsList().subscribe((billsList) => {
       this.billsList = billsList;
       this.cdr.detectChanges();
-      console.log(this.billsList);      
+      console.log(this.billsList);
     });
     // this.billDetailsService.getProductsDetailsList().subscribe((productDetailList) => {
     //   this.productsDetailsList = productDetailList;
@@ -112,12 +114,30 @@ export class AppBillComponent implements OnInit {
   }
 
   openDialog() {
-    this.dialog.open(CreateBillDialog, {
+    let dialogRef = this.dialog.open(CreateBillDialog, {
       width: '600px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if ((!result?.completed && result?.createdBillId) || !result) {
+        console.log('inside if');
+        let billId = result?.createdBillId
+          ? result.createdBillId
+          : window.sessionStorage.getItem('billId');
+
+        if (billId) {
+          this.billService.deleteBill(billId).subscribe({
+            next: () => console.log(`Bill ${billId} deleted successfully`),
+            error: (err) => console.error('Error deleting bill:', err),
+          });
+        }
+
+        window.sessionStorage.removeItem('billId');
+      }
     });
   }
 
-  updateProduct(bill: Bill) {
+  updateBill(bill: Bill) {
     console.log(bill);
 
     this.dialog.open(EditBillDialog, {
@@ -126,7 +146,7 @@ export class AppBillComponent implements OnInit {
     });
   }
 
-  deleteProduct(billId: number) {
+  deleteBill(billId: number) {
     Swal.fire({
       title: '¿Estás seguro de eliminar esta factura?',
       text: 'Esta acción no se puede deshacer',
@@ -145,7 +165,6 @@ export class AppBillComponent implements OnInit {
               text: 'La factura ha sido eliminado.',
               icon: 'success',
             }).then(() => {
-              this.reloadBillsList();
               window.location.reload();
             });
           },
@@ -213,40 +232,47 @@ export class CreateBillDialog implements OnInit {
   billsList: Bill[] = [];
   myCBill: Bill | null;
   public createdBillId: number = 0;
-  collectionsList: Collection[];
+  paymentMethodList: PaymentMethod[];
+  userId: number;
+  productsList: Product[];
 
   constructor(
     private billService: BillService,
     private billsDetailsService: BillDetailsService,
-    private collectionsService: CollectionService,
+    private paymentMethodService: PaymentMethodService,
+    private productsService: ProductsServiceService,
     public dialogRef: MatDialogRef<CreateBillDialog>,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.maxDate = new Date();
-    this.getCollectionsList();
+
+    this.getPaymentMethodsList();
+
+    if (!window.localStorage.getItem('user')) {
+      this.router.navigate(['/authentication/login']);
+    } else {
+      this.userId = parseInt(window.localStorage.getItem('user') ?? '');
+    }
+
+    this.getProductsList();
   }
 
   billForm = new FormGroup({
-    productName: new FormControl('', [Validators.required]),
-    categoryId: new FormControl('', [Validators.required]),
+    methodId: new FormControl('', [Validators.required]),
   });
 
   billDetailsForm = new FormGroup({
-    stock: new FormControl('', [Validators.required]),
-    weigthPoundsPack: new FormControl('', [Validators.required]),
-    startingPrice: new FormControl('', [Validators.required]),
-    minimunQuantity: new FormControl('', [Validators.required]),
-    collectionPoint: new FormControl('', [Validators.required]),
-    harvestDate: new FormControl('', [Validators.required]),
+    product: new FormControl('', [Validators.required]),
   });
 
-  submitProduct() {
+  submitBill() {
     if (this.billForm.valid) {
       let newBill: Bill = {
         bill_id: 0,
-        user_id: 1,
+        user_id: this.userId,
         users: {
           user_id: 0,
           names: 'string',
@@ -273,7 +299,7 @@ export class CreateBillDialog implements OnInit {
           modifiedBy: 'string',
           isDeleted: false,
         },
-        method_id: 0,
+        method_id: parseInt(this.billForm.controls['methodId'].value ?? ''),
         paymentMethods: {
           method_id: 0,
           method_name: 'string',
@@ -282,12 +308,15 @@ export class CreateBillDialog implements OnInit {
         purchase_date: new Date(),
         isDeleted: false,
       };
+
       this.billService.setBill(newBill).subscribe({
         next: (response) => {
-          console.log(response);
-          this.createdBillId = (response as Product).product_id;
-          console.log(this.createdBillId);
+          this.createdBillId = (response as Bill).bill_id;
           this.changeDetector.detectChanges();
+          window.sessionStorage.setItem(
+            'billId',
+            this.createdBillId.toString()
+          );
         },
         error: (error) => {
           console.error('Error de validación:', error.error.errors);
@@ -303,16 +332,8 @@ export class CreateBillDialog implements OnInit {
     }
   }
 
-  submitProductDetails() {
-    console.log(this.billDetailsForm);
-
+  submitBillsDetails() {
     if (this.billDetailsForm.valid) {
-      let harvestFormatDate = new Date(
-        this.billDetailsForm.controls['harvestDate'].value ?? this.maxDate
-      );
-      let unformattedPrice = this.removeCurrencyFormatting(
-        this.billForm.get('startingPrice')?.value ?? '0'
-      );
       let newBillDetails: BillDetails = {
         billDeta_id: 0,
         bill_id: this.createdBillId,
@@ -354,7 +375,9 @@ export class CreateBillDialog implements OnInit {
           purchase_date: new Date(),
           isDeleted: false,
         },
-        product_id: 1,
+        product_id: parseInt(
+          this.billDetailsForm.controls['product'].value ?? ''
+        ),
         products: {
           product_id: 0,
           product_name: 'string',
@@ -368,30 +391,35 @@ export class CreateBillDialog implements OnInit {
         },
         isDeleted: false,
       };
-      this.billsDetailsService
-        .setBillsDetails(newBillDetails, this.createdBillId)
-        .subscribe({
-          next: (response) => {
-            console.log(response);
-            Swal.fire({
-              title: '¡Usuario Creado!',
-              text: 'La información del usuario ha sido guardada correctamente.',
-              icon: 'success',
-            }).then(() => {
-              this.dialogRef.close(true);
-              this.changeDetector.detectChanges();
+      this.billsDetailsService.setBillsDetails(newBillDetails).subscribe({
+        next: (response) => {
+          console.log(response);
+          Swal.fire({
+            title: '¡Factura Creada!',
+            text: 'La información de la factura ha sido guardada correctamente.',
+            icon: 'success',
+          }).then(() => {
+            this.dialogRef.close({
+              completed: true,
+              createdBillId: this.createdBillId,
             });
-          },
-          error: (error) => {
-            console.error('Error de validación:', error.error.errors);
-            Swal.fire({
-              title: 'Error',
-              text: 'Ocurrió un error al actualizar el producto.',
-              icon: 'error',
-            });
-          },
-        });
+            this.changeDetector.detectChanges();
+          });
+        },
+        error: (error) => {
+          console.error('Error de validación:', error.error.errors);
+          Swal.fire({
+            title: 'Error',
+            text: 'Ocurrió un error al actualizar esta factura.',
+            icon: 'error',
+          });
+        },
+      });
     } else {
+      this.dialogRef.close({
+        completed: false,
+        createdBillId: this.createdBillId,
+      });
       console.error('Formulario no es válido');
     }
   }
@@ -421,13 +449,22 @@ export class CreateBillDialog implements OnInit {
     return value.replace(/[^\d.-]/g, '');
   }
 
-  getCollectionsList() {
-    this.collectionsService.getCollectionsList().subscribe((collectionList) => {
-      this.collectionsList = collectionList;
-      console.log(
-        'Lista actualizada de collectionsList:',
-        this.collectionsList
-      );
+  getPaymentMethodsList() {
+    this.paymentMethodService
+      .getPaymentMethodsList()
+      .subscribe((paymentList) => {
+        this.paymentMethodList = paymentList;
+        console.log(
+          'Lista actualizada de paymentMethodList:',
+          this.paymentMethodList
+        );
+      });
+  }
+
+  getProductsList() {
+    this.productsService.getProductsList().subscribe((products) => {
+      this.productsList = products;
+      console.log('Lista actualizada de productsList:', this.productsList);
     });
   }
 }
@@ -460,19 +497,21 @@ export class CreateBillDialog implements OnInit {
 export class EditBillDialog implements OnInit {
   hide = true;
   maxDate: Date;
-  productId: number = 0;
   billsList: Bill[] = [];
   Bill: Bill[] = [];
+  paymentMethodList: PaymentMethod[];
+  userId : number;
 
   constructor(
     public dialogRef: MatDialogRef<EditBillDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: Product,
-    private billsService: BillService
+    private paymentMethodService: PaymentMethodService,
+    @Inject(MAT_DIALOG_DATA) public data: Bill,
+    private billsService: BillService,
+    private router: Router
   ) {}
 
   billsForm = new FormGroup({
-    productName: new FormControl('', [Validators.required]),
-    categoryId: new FormControl<number | null>(null, [Validators.required]),
+    paymentMethod: new FormControl<number | null>(null, [Validators.required]),
   });
 
   ngOnInit(): void {
@@ -484,86 +523,101 @@ export class EditBillDialog implements OnInit {
     );
 
     this.getProductsCategories();
+    this.getPaymentMethodsList();
 
-    // this.productForm.patchValue({
-    //   productName: this.data.product_name,
-    //   categoryId: this.data.category_id,
-    // });
+    this.billsForm.patchValue({
+      paymentMethod: this.data.bill_id,
+    });
+
+    if (!window.localStorage.getItem('user')) {
+      this.router.navigate(['/authentication/login']);
+    } else {
+      this.userId = parseInt(window.localStorage.getItem('user') ?? '');
+    }
   }
 
-  submitProductUpdate() {
-    // if (this.productForm.valid) {
-    this.productId = this.data.product_id;
-
-    let newBill: Bill = {
-      bill_id: 0,
-      user_id: 1,
-      users: {
-        user_id: 0,
-        names: 'string',
-        last_names: 'string',
-        email: 'string',
-        document_number: 'string',
-        username: 'string',
-        password: 'string',
-        born_date: '2024-10-27T19:38:47.562Z',
-        userType_id: 0,
-        userTypes: {
+  submitBillUpdate() {
+    if (this.billsForm.valid) {
+      
+      let newBill: Bill = {
+        bill_id: this.data.bill_id,
+        user_id: this.userId,
+        users: {
+          user_id: 0,
+          names: 'string',
+          last_names: 'string',
+          email: 'string',
+          document_number: 'string',
+          username: 'string',
+          password: 'string',
+          born_date: '2024-10-27T19:38:47.562Z',
           userType_id: 0,
-          userType_name: 'string',
-          isDeleted: true,
-        },
-        document_id: 0,
-        documents: {
+          userTypes: {
+            userType_id: 0,
+            userType_name: 'string',
+            isDeleted: true,
+          },
           document_id: 0,
-          document_name: 'string',
-          isDeleted: true,
+          documents: {
+            document_id: 0,
+            document_name: 'string',
+            isDeleted: true,
+          },
+          date: new Date(),
+          modified: new Date(),
+          modifiedBy: 'string',
+          isDeleted: false,
         },
-        date: new Date(),
-        modified: new Date(),
-        modifiedBy: 'string',
+        method_id: this.billsForm.controls['paymentMethod'].value ?? 0,
+        paymentMethods: {
+          method_id: 0,
+          method_name: 'string',
+          isDeleted: false,
+        },
+        purchase_date: this.data.purchase_date,
         isDeleted: false,
-      },
-      method_id: 0,
-      paymentMethods: {
-        method_id: 0,
-        method_name: 'string',
-        isDeleted: false,
-      },
-      purchase_date: new Date(),
-      isDeleted: false,
-    };
-    this.billsService.updateBill(newBill, this.data.product_id).subscribe({
-      next: (response) => {
-        Swal.fire({
-          title: '¡Producto actualizado!',
-          text: 'La información del Producto ha sido actualizada correctamente.',
-          icon: 'success',
-        }).then(() => {
-          this.dialogRef.close(true);
-          window.location.reload();
-        });
-      },
-      error: (error) => {
-        console.error('Error de validación:', error.error.errors);
-        Swal.fire({
-          title: 'Error',
-          text: 'Ocurrió un error al actualizar el Producto.',
-          icon: 'error',
-        });
-      },
-    });
-    // } else {
-    // console.error('Formulario no es válido');
-    // }
+      };
+      this.billsService.updateBill(newBill, this.data.bill_id).subscribe({
+        next: (response) => {
+          Swal.fire({
+            title: '¡Factura actualizada!',
+            text: 'La información de la factura ha sido actualizada correctamente.',
+            icon: 'success',
+          }).then(() => {
+            this.dialogRef.close(true);
+            window.location.reload();
+          });
+        },
+        error: (error) => {
+          console.error('Error de validación:', error.error.errors);
+          Swal.fire({
+            title: 'Error',
+            text: 'Ocurrió un error al actualizar La factura.',
+            icon: 'error',
+          });
+        },
+      });
+    } else {
+      console.error('Formulario no es válido');
+    }
   }
 
   getProductsCategories() {
-    this.billsService
-      .getBillsList()
-      .subscribe((list) => {
-        this.billsList = list;
-        console.log('ProductCategories', this.billsList);
+    this.billsService.getBillsList().subscribe((list) => {
+      this.billsList = list;
+      console.log('ProductCategories', this.billsList);
+    });
+  }
+
+  getPaymentMethodsList() {
+    this.paymentMethodService
+      .getPaymentMethodsList()
+      .subscribe((paymentList) => {
+        this.paymentMethodList = paymentList;
+        console.log(
+          'Lista actualizada de paymentMethodList:',
+          this.paymentMethodList
+        );
       });
   }
 }

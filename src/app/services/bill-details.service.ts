@@ -17,22 +17,22 @@ export class BillDetailsService {
   constructor( private http: HttpClient) { }
 
   getBillsDetailsList() {
-    const url = this.path + '/Bills';
+    const url = this.path + '/BillDetails';
     return this.http.get<BillDetails[]>(url);
   }
 
   updateBillsDetails(productObject: BillDetails, productId: number) {
-    const url = this.path + '/Bills/' + productId;
+    const url = this.path + '/BillDetails/' + productId;
     return this.http.put(url, JSON.stringify(productObject), { headers: this.headers });
   }
 
-  setBillsDetails(productObject: BillDetails, productId: number) {
-    const url = this.path + '/Bills/' + productId;
+  setBillsDetails(productObject: BillDetails) {
+    const url = this.path + '/BillDetails/';
     return this.http.post(url, JSON.stringify(productObject), { headers: this.headers });
   }
 
   deleteBillsDetail(detailProductId: number) {
-    const url = this.path + '/Bills/' + detailProductId;
+    const url = this.path + '/BillDetails/' + detailProductId;
     return this.http.delete(url, { headers: this.headers });
   }
 }
