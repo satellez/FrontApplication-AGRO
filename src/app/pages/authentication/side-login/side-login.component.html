@@ -7,24 +7,29 @@
                         <h1>AgroConecta</h1>
                     </div>
 
-                    <form class="m-t-30" [formGroup]="formLogin" (ngSubmit)="submitLogin()">
-                        <mat-label>Nombre de usuario</mat-label>
+                    <form class="m-t-30 m-b-12" [formGroup]="formLogin" (ngSubmit)="submitLogin()">
+                        <mat-label>Correo Electrónico</mat-label>
                         <mat-form-field appearance="outline" class="w-100" color="primary">
-                            <input type="text" matInput formControlName="uname"> @if (formLogin.get('uname')?.hasError('required')) {
+                            <input type="text" matInput formControlName="uname"> @if
+                            (formLogin.get('uname')?.hasError('required')) {
                             <mat-error>El nombre de usuario es <strong>obligatorio.</strong></mat-error>
                             }
                         </mat-form-field>
                         <mat-label>Contraseña</mat-label>
                         <mat-form-field appearance="outline" class="w-100" color="primary">
-                            <input type="password" matInput formControlName="password"> @if (formLogin.get('password')?.hasError('required')) {
+                            <input type="password" matInput formControlName="password"> @if
+                            (formLogin.get('password')?.hasError('required')) {
                             <mat-error>La contraseña es <strong>obligatoria.</strong></mat-error>
                             }
                         </mat-form-field>
                         <button mat-flat-button color="primary" class="w-100" type="submit">
-              Iniciar sesión
-            </button>
+                            Iniciar sesión
+                        </button>
                         <!-- input -->
                     </form>
+                    <a mat-stroked-button color="primary" class="w-100" type="submit" [routerLink]="['/authentication/register']">
+                        Registrarme
+                    </a>
                 </mat-card-content>
             </mat-card>
         </div>
