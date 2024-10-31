@@ -13,6 +13,8 @@ import { AppCollectionComponent } from './collections-table/collection.component
 import { AppProductDetailsComponent } from './product-details-table/product-details.component';
 import { AppBillComponent } from './bills-table/bill.component';
 import { AppPaymentMethodComponent } from './payment-methods/payment-methods.component';
+import { AppDocumentsTypesComponent } from './documents-types/document-type.component';
+import { AppUserTypesComponent } from './users-types/users-types.component';
 
 export const UiComponentsRoutes: Routes = [
   {
@@ -65,6 +67,14 @@ export const UiComponentsRoutes: Routes = [
       {
         path: 'medios-de-pago',
         component: AppPaymentMethodComponent,
+      },
+      {
+        path: 'tipos-documento',
+        component: AppDocumentsTypesComponent,
+      },
+      {
+        path: 'tipos-de-usuarios',
+        component: AppUserTypesComponent,
       },
     ],
   },

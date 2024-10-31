@@ -1,0 +1,65 @@
+<mat-card class="cardWithShadow">
+    <mat-card-header>
+        <mat-card-title-group class="m-b-10">
+            <mat-card-title>Listado de Tipos de Documento</mat-card-title>
+            <button mat-flat-button (click)="openDialog()" color="primary">Crear Tipos de Documento</button>
+        </mat-card-title-group>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="table-responsive">
+            <table mat-table [dataSource]="documentsTypesList" class="w-100">
+                <!-- Position Column -->
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14 p-l-0">
+                        ID
+                    </th>
+                    <td mat-cell *matCellDef="let docType" class="p-l-0">
+                        <div class="d-flex align-items-center">
+                            <p class="f-s-14">
+                                {{ docType.document_id }}
+                            </p>
+                        </div>
+                    </td>
+                </ng-container>
+
+
+                <!-- Número de Documento Column -->
+                <ng-container matColumnDef="docName">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14 p-l-0">
+                        Nombre
+                    </th>
+                    <td mat-cell *matCellDef="let docType" class="p-l-0">
+                        <div class="d-flex align-items-center">
+                            <p class="f-s-14">
+                                {{ docType.document_name }}
+                            </p>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-14"></th>
+                    <td mat-cell *matCellDef="let element" class="mat-body-1">
+                        <button mat-icon-button [matMenuTriggerFor]="productMenu">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #productMenu="matMenu">
+                            <button mat-menu-item (click)="updateDocumentType(element)">
+                                <mat-icon>edit</mat-icon>
+                                <span>Editar</span>
+                            </button>
+                            <button mat-menu-item (click)="deleteDocumentType(element.document_id)">
+                                <mat-icon>delete</mat-icon>
+                                <span>Eliminar</span>
+                            </button>
+                        </mat-menu>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedDocumentTypeColumns"></tr>
+                <tr mat-row *matRowDef="let productRow; columns: displayedDocumentTypeColumns"></tr>
+            </table>
+        </div>
+    </mat-card-content>
+</mat-card>

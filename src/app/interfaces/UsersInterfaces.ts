@@ -7,7 +7,7 @@ export interface User {
   username: string;
   password: string;
   born_date: string;
-  userType_id: number;
+  UserType_id: number;
   userTypes: UserType;
   document_id: number;
   documents: Document;
@@ -18,8 +18,8 @@ export interface User {
 }
 
 export interface UserType {
-  userType_id: number;
-  userType_name: string;
+  UserType_id: number;
+  UserType_name: string;
   isDeleted: boolean;
 }
 

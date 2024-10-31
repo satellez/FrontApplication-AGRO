@@ -72,6 +72,16 @@ export const navItems: NavItem[] = [
     iconName: 'list-details',
     route: '/admin/medios-de-pago',
   },
+  {
+    displayName: 'Tipos de Documento',
+    iconName: 'list-details',
+    route: '/admin/tipos-documento',
+  },
+  {
+    displayName: 'Tipos de Usuario',
+    iconName: 'list-details',
+    route: '/admin/tipos-de-usuarios',
+  },
   // {
   //   navCap: 'Auth',
   // },

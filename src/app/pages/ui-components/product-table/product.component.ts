@@ -335,10 +335,10 @@ export class CreateProductDialog implements OnInit {
           username: 'string',
           password: 'string',
           born_date: '2024-10-27T19:38:47.562Z',
-          userType_id: 0,
+          UserType_id: 0,
           userTypes: {
-            userType_id: 0,
-            userType_name: 'string',
+            UserType_id: 0,
+            UserType_name: 'string',
             isDeleted: true,
           },
           document_id: 0,

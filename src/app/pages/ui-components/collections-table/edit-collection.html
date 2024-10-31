@@ -1,21 +1,21 @@
-<h2 mat-dialog-title>Editar Productos</h2>
+<h2 mat-dialog-title>Editar Punto de Recolección</h2>
 <mat-dialog-content>
     <p>
-        Complete la siguiente información para editar productos.
+        Complete la siguiente información para editar el Punto de Recolección.
     </p>
     <form class="example-form" [formGroup]="collectionForm" (ngSubmit)="submitCollectionUpdate()">
         <div class="row">
             <div class="col-lg-6 m-b-8">
                 <mat-form-field appearance="outline" class="w-100" color="primary">
                     <mat-label>Nombre</mat-label>
-                    <input type="text" matInput formControlName="collectionName"> @if (collectionForm.get('firstName')?.hasError('required')) {
+                    <input type="text" matInput formControlName="collectionName"> @if (collectionForm.get('collectionName')?.hasError('required')) {
                     <mat-error>El nombre es <strong>obligatorio.</strong></mat-error>
                     }
                 </mat-form-field>
             </div>
             <div class="col-lg-6 m-b-8">
                 <mat-form-field appearance="outline" class="w-100" color="primary">
-                    <mat-label>Nombre</mat-label>
+                    <mat-label>Dirección</mat-label>
                     <input type="text" matInput formControlName="address"> @if (collectionForm.get('address')?.hasError('required')) {
                     <mat-error>La dirección <strong>obligatorio.</strong></mat-error>
                     }
