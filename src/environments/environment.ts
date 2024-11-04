@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   //api: 'http://localhost:5000'
-  api: 'http://agroconecta.somee.com/api',
+  api: 'https://agroconecta.somee.com/api',
 };
 
 /*
