@@ -7,32 +7,44 @@
             <h1>Agroconecta</h1>
           </div>
 
-          <form class="m-t-30">
+          <form [formGroup]="form" (ngSubmit)="submit()" class="m-t-30">
+            <!-- Campo de Nombre -->
             <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Name</mat-label>
             <mat-form-field appearance="outline" class="w-100" color="primary">
-              <input matInput />
+              <input matInput formControlName="uname" />
             </mat-form-field>
-            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Email Adddress</mat-label>
+
+            <!-- Campo de Email -->
+            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Email Address</mat-label>
             <mat-form-field appearance="outline" class="w-100" color="primary">
-              <input matInput type="email" />
+              <input matInput formControlName="email" type="email" />
             </mat-form-field>
-            <!-- password -->
+
+            <!-- Campo de Contraseña -->
             <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Password</mat-label>
             <mat-form-field appearance="outline" class="w-100" color="primary">
-              <input matInput type="password" />
+              <input matInput formControlName="password" type="password" />
             </mat-form-field>
 
-            <button type="submit" mat-flat-button color="primary" class="w-100">
-              Registrame
+            <!-- Checkbox de aceptación de la política -->
+            <div class="policy-section m-t-16">
+              <mat-checkbox formControlName="acceptPolicy">
+                He leído y acepto la
+                <a routerLink="/policy" target="_blank" class="text-primary">política de tratamiento de datos</a>
+              </mat-checkbox>
+            </div>
+
+            <!-- Botón de registro, deshabilitado si el formulario no es válido -->
+            <button type="submit" mat-flat-button color="primary" class="w-100" [disabled]="!form.valid">
+              Registrarme
             </button>
-            <!-- input -->
-
-            <!-- TODO: add tipoDocumento, tipoUsuario -->
           </form>
-          <span class="d-block f-w-500 text-center m-t-24">¿Ya tienes cuenta?
 
+          <span class="d-block f-w-500 text-center m-t-24">
+            ¿Ya tienes cuenta?
             <a [routerLink]="['/authentication/login']" class="text-decoration-none text-primary f-w-500 f-s-14">
-              Iniciar Sesión</a>
+              Iniciar Sesión
+            </a>
           </span>
         </mat-card-content>
       </mat-card>

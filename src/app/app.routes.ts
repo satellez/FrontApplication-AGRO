@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { BlankComponent } from './layouts/blank/blank.component';
 import { FullComponent } from './layouts/full/full.component';
+import { PolicyComponent } from './policy/policy.component';  // Importa el componente de política
 
 export const routes: Routes = [
   {
@@ -41,6 +42,10 @@ export const routes: Routes = [
           import('./pages/authentication/authentication.routes').then(
             (m) => m.AuthenticationRoutes
           ),
+      },
+      {
+        path: 'policy',  // Agrega esta ruta aquí
+        component: PolicyComponent,
       },
     ],
   },
