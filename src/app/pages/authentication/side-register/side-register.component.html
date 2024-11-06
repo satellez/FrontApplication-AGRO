@@ -9,29 +9,33 @@
 
           <form [formGroup]="form" (ngSubmit)="submit()" class="m-t-30">
             <!-- Campo de Nombre -->
-            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Name</mat-label>
+            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Nombre</mat-label>
             <mat-form-field appearance="outline" class="w-100" color="primary">
               <input matInput formControlName="uname" />
+              <mat-error *ngIf="f.uname?.invalid && f.uname?.touched">El nombre debe tener al menos 6 caracteres.</mat-error>
             </mat-form-field>
 
             <!-- Campo de Email -->
-            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Email Address</mat-label>
+            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Correo Electrónico</mat-label>
             <mat-form-field appearance="outline" class="w-100" color="primary">
               <input matInput formControlName="email" type="email" />
+              <mat-error *ngIf="f.email?.invalid && f.email?.touched">Ingrese un correo electrónico válido.</mat-error>
             </mat-form-field>
 
             <!-- Campo de Contraseña -->
-            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Password</mat-label>
+            <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Contraseña</mat-label>
             <mat-form-field appearance="outline" class="w-100" color="primary">
               <input matInput formControlName="password" type="password" />
+              <mat-error *ngIf="f.password?.invalid && f.password?.touched">La contraseña es obligatoria.</mat-error>
             </mat-form-field>
 
             <!-- Checkbox de aceptación de la política -->
             <div class="policy-section m-t-16">
               <mat-checkbox formControlName="acceptPolicy">
                 He leído y acepto la
-                <a routerLink="/policy" target="_blank" class="text-primary">política de tratamiento de datos</a>
+                <a routerLink="/policy" class="text-primary">política de tratamiento de datos</a>
               </mat-checkbox>
+              <mat-error *ngIf="f.acceptPolicy?.invalid && f.acceptPolicy?.touched">Debes aceptar la política.</mat-error>
             </div>
 
             <!-- Botón de registro, deshabilitado si el formulario no es válido -->
